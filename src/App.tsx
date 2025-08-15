@@ -21,13 +21,35 @@ function App() {
     }));
   };
 
-  // Função para lidar com o envio do formulário
+  // // ==================================================================
+  // // A GRANDE MUDANÇA ESTÁ AQUI
+  // // Esta é a nova função que envia os dados para a Netlify
+  // // ==================================================================
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Agendamento salvo:', formData);
-    // ATENÇÃO: A função alert() pode não funcionar em todos os ambientes.
-    // Esta é uma maneira simples de dar feedback ao usuário.
-    alert('Agendamento salvo com sucesso!');
+
+    const form = e.target as HTMLFormElement;
+    const data = new FormData(form);
+
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(data as any).toString()
+    })
+    .then(() => {
+        alert('Agendamento enviado com sucesso!');
+        // Opcional: Limpar o formulário após o envio
+        setFormData({
+            nomeCliente: '',
+            telefone: '',
+            data: '',
+            horario: '',
+            veiculo: '',
+            tipoLavagem: '',
+            formaPagamento: ''
+        });
+    })
+    .catch((error) => alert(error));
   };
 
   // Horários disponíveis para seleção
@@ -51,9 +73,13 @@ function App() {
 
           {/* Card do Formulário */}
           <div className="bg-white rounded-2xl shadow-xl p-8">
-            {/* // <-- MUDANÇA 1 AQUI: Adicionamos os atributos para a Netlify */}
-            <form name="agendamentos" data-netlify="true" onSubmit={handleSubmit} className="space-y-6">
-              {/* // <-- MUDANÇA 2 AQUI: Campo oculto que a Netlify precisa para formulários em React */}
+            <form 
+              name="agendamentos" 
+              method="POST"
+              data-netlify="true" 
+              onSubmit={handleSubmit} 
+              className="space-y-6"
+            >
               <input type="hidden" name="form-name" value="agendamentos" />
               
               {/* Campo: Nome do Cliente */}
