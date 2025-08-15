@@ -51,7 +51,10 @@ function App() {
 
           {/* Card do Formulário */}
           <div className="bg-white rounded-2xl shadow-xl p-8">
-            <form onSubmit={handleSubmit} className="space-y-6">
+            {/* // <-- MUDANÇA 1 AQUI: Adicionamos os atributos para a Netlify */}
+            <form name="agendamentos" data-netlify="true" onSubmit={handleSubmit} className="space-y-6">
+              {/* // <-- MUDANÇA 2 AQUI: Campo oculto que a Netlify precisa para formulários em React */}
+              <input type="hidden" name="form-name" value="agendamentos" />
               
               {/* Campo: Nome do Cliente */}
               <div className="space-y-2">
